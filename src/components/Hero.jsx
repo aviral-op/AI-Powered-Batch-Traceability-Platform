@@ -5,6 +5,10 @@ function Hero() {
         AI-Powered Batch Traceability
       </h2>
 
+      <p className="text-center mt-2">
+       AI-driven supply chain visibility
+      </p>
+
       <p className="text-lg text-gray-700 mb-6">
         Track herbal batches, certificates and quality reports.
       </p>
