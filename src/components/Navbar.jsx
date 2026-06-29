@@ -6,7 +6,7 @@ function Navbar() {
         AI Traceability Platform
       </h1>
 
-      <div className="flex gap-6">
+      <div className="hidden md:flex gap-6">
        <Link to="/">Home</Link>
        <Link to="/dashboard">Dashboard</Link>
        <Link to="/batches">Batches</Link>

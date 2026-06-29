@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Modal from "../components/ui/Modal";
 import Loader from "../components/ui/Loader";
 import Button from "../components/ui/Button";
@@ -11,6 +12,23 @@ import Toast from "../components/ui/Toast";
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [batches, setBatches] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+  axios
+    .get("http://localhost:5000/api/batches")
+    .then((response) => {
+      setBatches(response.data);
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.log(error);
+      setLoading(false);
+    });
+  }, []);
+  if (loading) {
+  return <Loader />;
+  }
   return (
     <div>
       <Navbar />
@@ -36,21 +54,16 @@ function Home() {
       Open Modal
       </button>
       </div>
-
-      <div className="grid md:grid-cols-2 gap-6 p-8">
-        <BatchCard
-          batchId="HB001"
-          product="Ashwagandha"
-          status="Approved"
-        />
-
-        <BatchCard
-          batchId="HB002"
-          product="Tulsi"
-          status="Pending"
-        />
-      </div>
-     <Loader />
+    <div className="grid md:grid-cols-2 gap-6 p-8">
+    {batches.map((batch) => (
+    <BatchCard
+      key={batch.id}
+      batchId={batch.name}
+      product="Herbal Product"
+      status={batch.status}
+     />
+     ))}
+    </div>
 
      <Modal
      isOpen={isModalOpen}
@@ -60,7 +73,7 @@ function Home() {
     <p>This is a demo modal for Week 3.</p>
     </Modal>
 
-    <Toast message="Batch Saved Successfully!" />
+    <Toast message="Batch Saved Successfully!" /> 
     <Footer />
     </div>
   );
