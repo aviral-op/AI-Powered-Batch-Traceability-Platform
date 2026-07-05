@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const Batch = require("./models/Batch");
+const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 
@@ -10,88 +12,132 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
-// In-memory data
-let batches = [
-  { id: 1, name: "HB001", status: "Approved" },
-  { id: 2, name: "HB002", status: "Pending" },
-  { id: 3, name: "HB003", status: "Approved" }
-];
+const dns = require("dns");
+
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
+
+dns.resolveSrv("_mongodb._tcp.cluster0.vcssyr3.mongodb.net", (err, addresses) => {
+  console.log("DNS Error:", err);
+  console.log("Addresses:", addresses);
+});
+
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.log(err));
+
+
 
 // 1. GET All Batches
-app.get("/api/batches", (req, res) => {
-  res.status(200).json(batches);
+app.get("/api/batches", async (req, res) => {
+  try {
+    const batches = await Batch.find();
+    res.status(200).json(batches);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 // 6. SEARCH Batch
-app.get("/api/batches/search", (req, res) => {
+app.get("/api/batches/search", async (req, res) => {
+  try {
 
-  const q = req.query.q || "";
+    const q = req.query.q || "";
 
-  const result = batches.filter(batch =>
-    batch.name.toLowerCase().includes(q.toLowerCase())
-  );
+    const result = await Batch.find({
+      name: { $regex: q, $options: "i" }
+    });
 
-  res.status(200).json(result);
+    res.status(200).json(result);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 // 2. GET Single Batch
-app.get("/api/batches/:id", (req, res) => {
-  const batch = batches.find(
-    b => b.id === parseInt(req.params.id)
-  );
+app.get("/api/batches/:id", async (req, res) => {
+  try {
+    const batch = await Batch.findById(req.params.id);
 
-  if (!batch) {
-    return res.status(404).json({ message: "Batch not found" });
+    if (!batch) {
+      return res.status(404).json({ message: "Batch not found" });
+    }
+
+    res.status(200).json(batch);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
-
-  res.status(200).json(batch);
 });
 
 // 3. POST Batch
-app.post("/api/batches", (req, res) => {
+app.post("/api/batches", async (req, res) => {
+  try {
+    const batch = new Batch({
+      name: req.body.name,
+      status: req.body.status,
+    });
 
-  const newBatch = {
-    id: batches.length + 1,
-    name: req.body.name,
-    status: req.body.status
-  };
+    const savedBatch = await batch.save();
 
-  batches.push(newBatch);
-
-  res.status(201).json(newBatch);
+    res.status(201).json(savedBatch);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 // 4. PUT Batch
-app.put("/api/batches/:id", (req, res) => {
+app.put("/api/batches/:id", async (req, res) => {
+  try {
 
-  const batch = batches.find(
-    b => b.id === parseInt(req.params.id)
-  );
+    const batch = await Batch.findByIdAndUpdate(
+      req.params.id,
+      {
+        name: req.body.name,
+        status: req.body.status
+      },
+      { new: true } // updated document return karega
+    );
 
-  if (!batch) {
-    return res.status(404).json({ message: "Batch not found" });
+    if (!batch) {
+      return res.status(404).json({ message: "Batch not found" });
+    }
+
+    res.status(200).json(batch);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
-
-  batch.name = req.body.name;
-  batch.status = req.body.status;
-
-  res.status(200).json(batch);
 });
 
 // 5. DELETE Batch
-app.delete("/api/batches/:id", (req, res) => {
+app.delete("/api/batches/:id", async (req, res) => {
+  try {
 
-  const index = batches.findIndex(
-    b => b.id === parseInt(req.params.id)
-  );
+    const batch = await Batch.findByIdAndDelete(req.params.id);
 
-  if (index === -1) {
-    return res.status(404).json({ message: "Batch not found" });
+    if (!batch) {
+      return res.status(404).json({ message: "Batch not found" });
+    }
+
+    res.status(204).send();
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
+});
 
-  batches.splice(index, 1);
+app.get("/api/seed", async (req, res) => {
+  await Batch.deleteMany({});
 
-  res.status(204).send();
+  await Batch.insertMany([
+    { name: "HB001", status: "Approved" },
+    { name: "HB002", status: "Pending" },
+    { name: "HB003", status: "Approved" },
+  ]);
+
+  res.send("Database Seeded");
 });
 
 app.listen(PORT, () => {

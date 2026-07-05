@@ -70,7 +70,7 @@ function Home() {
     onClose={() => setIsModalOpen(false)}
     title="Batch Information"
      >
-    <p>This is a demo modal for Week 3.</p>
+    <p>Batch information loaded from the Express backend.</p>
     </Modal>
 
     <Toast message="Batch Saved Successfully!" /> 
