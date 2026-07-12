@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
+const verifyToken = require("./middleware/authMiddleware");
 
 const app = express();
 
@@ -74,7 +75,7 @@ app.get("/api/batches/:id", async (req, res) => {
 });
 
 // 3. POST Batch
-app.post("/api/batches", async (req, res) => {
+app.post("/api/batches", verifyToken, async (req, res) => {
   try {
     const batch = new Batch({
       name: req.body.name,
@@ -114,7 +115,7 @@ app.put("/api/batches/:id", async (req, res) => {
 });
 
 // 5. DELETE Batch
-app.delete("/api/batches/:id", async (req, res) => {
+app.delete("/api/batches/:id",verifyToken,async (req, res) => {
   try {
 
     const batch = await Batch.findByIdAndDelete(req.params.id);
