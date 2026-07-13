@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { createBatch } from "../services/batchService";
 import Modal from "../components/ui/Modal";
 import Loader from "../components/ui/Loader";
 import Button from "../components/ui/Button";
@@ -14,8 +15,9 @@ function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [batches, setBatches] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [productName, setProductName] = useState("");
   useEffect(() => {
-  axios
+   axios
     .get("http://localhost:5000/api/batches")
     .then((response) => {
       setBatches(response.data);
@@ -26,6 +28,30 @@ function Home() {
       setLoading(false);
     });
   }, []);
+
+  const handleSubmit = async () => {
+  if (!productName) {
+    alert("Enter Product Name");
+    return;
+  }
+
+  try {
+    await createBatch({
+      name: productName,
+      status: "Pending",
+    });
+
+    alert("Batch Created Successfully");
+
+    const response = await axios.get("http://localhost:5000/api/batches");
+    setBatches(response.data);
+
+    setProductName("");
+
+  } catch (error) {
+    alert(error.response?.data?.message || "Failed to create batch");
+  }
+};
   if (loading) {
   return <Loader />;
   }
@@ -37,14 +63,16 @@ function Home() {
 
       <div className="p-6">
       <Input
-       label="Product Name"
-       placeholder="Enter Product Name"
+        label="Product Name"
+        placeholder="Enter Product Name"
+        value={productName}
+        onChange={(e) => setProductName(e.target.value)}
       />
 
       <div className="mt-4">
       <Button
-       text="Submit"
-       onClick={() => alert("Button Clicked")}
+      text="Submit"
+      onClick={handleSubmit}
       />
       </div>
       <button
@@ -57,7 +85,7 @@ function Home() {
     <div className="grid md:grid-cols-2 gap-6 p-8">
     {batches.map((batch) => (
     <BatchCard
-      key={batch.id}
+      key={batch._id}
       batchId={batch.name}
       product="Herbal Product"
       status={batch.status}
