@@ -6,6 +6,10 @@ import Dashboard from "./pages/Dashboard";
 import Batches from "./pages/Batches";
 import Reports from "./pages/Reports";
 
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function App() {
   const [darkMode, setDarkMode] = useState(false);
 
@@ -26,12 +30,33 @@ function App() {
           {darkMode ? "Light Mode" : "Dark Mode"}
         </button>
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/batches" element={<Batches />} />
-          <Route path="/reports" element={<Reports />} />
-        </Routes>
+       <Routes>
+  <Route path="/" element={<Home />} />
+
+  <Route path="/login" element={<Login />} />
+
+  <Route path="/register" element={<Register />} />
+
+  <Route
+    path="/dashboard"
+    element={
+      <ProtectedRoute>
+        <Dashboard />
+      </ProtectedRoute>
+    }
+  />
+
+  <Route path="/batches" element={<Batches />} />
+
+  <Route
+    path="/reports"
+    element={
+      <ProtectedRoute>
+        <Reports />
+      </ProtectedRoute>
+    }
+   />
+       </Routes>
 
       </div>
     </div>

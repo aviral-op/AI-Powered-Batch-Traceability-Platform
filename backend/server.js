@@ -6,12 +6,21 @@ const express = require("express");
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const verifyToken = require("./middleware/authMiddleware");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  message: {
+    message: "Too many requests. Please try again after 15 minutes.",
+  },
+});
+
 app.use(cors());
 app.use(express.json());
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authLimiter , authRoutes);
 
 const PORT = process.env.PORT || 5000;
 
