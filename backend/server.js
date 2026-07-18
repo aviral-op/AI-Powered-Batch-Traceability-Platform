@@ -7,6 +7,9 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const verifyToken = require("./middleware/authMiddleware");
 const rateLimit = require("express-rate-limit");
+const passport = require("passport");
+const session = require("express-session");
+require("./config/passport");
 
 const app = express();
 
@@ -20,7 +23,17 @@ const authLimiter = rateLimit({
 
 app.use(cors());
 app.use(express.json());
-app.use("/api/auth", authLimiter , authRoutes);
+app.use(
+  session({
+    secret: "googleauthsecret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 5000;
 

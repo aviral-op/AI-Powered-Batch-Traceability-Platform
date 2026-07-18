@@ -68,6 +68,18 @@ function Login() {
         >
           Login
         </button>
+
+        <hr className="my-4" />
+
+<button
+  type="button"
+  onClick={() => {
+    window.location.href = "http://localhost:5000/api/auth/google";
+  }}
+  className="bg-red-600 text-white w-full py-2 rounded"
+>
+  Sign in with Google
+</button>
       </form>
     </div>
   );

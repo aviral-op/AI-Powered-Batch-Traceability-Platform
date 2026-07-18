@@ -1,5 +1,6 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+console.log("Dashboard Loaded");
 
 function Dashboard() {
   return (
