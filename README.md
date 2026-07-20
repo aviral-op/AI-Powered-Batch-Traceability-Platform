@@ -7,8 +7,12 @@ AI-powered full-stack web application for batch traceability, quality monitoring
 - React (Vite)
 - Node.js
 - Express.js
+- MongoDB Atlas
+- Mongoose
 - Axios
 - Tailwind CSS
+- Hugging Face Router API
+- OpenAI SDK
 
 ## Frontend Setup
 
@@ -41,12 +45,19 @@ http://localhost:5000
 
 ## API Endpoints
 
+### Batch APIs
+
 - GET `/api/batches`
 - GET `/api/batches/:id`
 - POST `/api/batches`
 - PUT `/api/batches/:id`
 - DELETE `/api/batches/:id`
 - GET `/api/batches/search?q=HB001`
+
+### AI APIs
+
+- POST `/api/ai/quality-report`
+
 
 ## Environment Variables
 
@@ -60,7 +71,19 @@ The `.env` file is ignored using `.gitignore`.
 
 ## Database
 
-This project uses **MongoDB Atlas** as the cloud database and **Mongoose** as the ODM.
+## AI Quality Report Generator
+
+The application includes an AI-powered Quality Report Generator using the Hugging Face Router API.
+
+Features:
+
+- AI-generated Quality Assessment
+- Possible Risk Analysis
+- Storage Recommendations
+- Compliance Remarks
+- Final Recommendation
+
+The report is generated dynamically based on the selected batch details and displayed in Markdown format on the dashboard.
 
 ### Why MongoDB?
 
@@ -94,6 +117,7 @@ The application contains one collection:
 ```env
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
+HF_TOKEN=your_huggingface_router_api_key
 ```
 
 8. Install dependencies
@@ -107,3 +131,13 @@ npm install
 ```bash
 npm start
 ```
+
+## Project Features
+
+- User Authentication
+- Google OAuth Login
+- Batch Management (CRUD)
+- MongoDB Atlas Integration
+- Batch Search
+- AI Quality Report Generator
+- Responsive Dashboard
