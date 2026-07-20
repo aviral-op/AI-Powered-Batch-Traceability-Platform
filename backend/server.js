@@ -9,6 +9,7 @@ const verifyToken = require("./middleware/authMiddleware");
 const rateLimit = require("express-rate-limit");
 const passport = require("passport");
 const session = require("express-session");
+const aiRoutes = require("./routes/aiRoutes");
 require("./config/passport");
 
 const app = express();
@@ -34,6 +35,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/api/auth", authRoutes);
+app.use("/api/ai", aiRoutes);
 
 const PORT = process.env.PORT || 5000;
 
