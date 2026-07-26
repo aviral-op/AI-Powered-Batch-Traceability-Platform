@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 
@@ -10,28 +10,57 @@ function Dashboard() {
   const [report, setReport] = useState("");
   const [error, setError] = useState("");
 
+  const [batches, setBatches] = useState([]);
+  const [selectedBatch, setSelectedBatch] = useState("");
+
+  const fetchBatches = async () => {
+  try {
+    const res = await axios.get("http://localhost:5000/api/batches");
+    setBatches(res.data);
+
+    if (res.data.length > 0) {
+      setSelectedBatch(res.data[0]._id);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+    useEffect(() => {
+    fetchBatches();
+    }, []);
+
   const generateReport = async () => {
-    try {
-      setLoading(true);
-      setError("");
-      setReport("");
+  try {
+    setLoading(true);
+    setError("");
+    setReport("");
 
-      const res = await axios.post(
-        "http://localhost:5000/api/ai/quality-report",
-        {
-          batchId: "HB101",
-          product: "Tulsi Oil",
-          quantity: 500,
-          status: "Ready for Dispatch",
-        }
-      );
+    const batch = batches.find(
+      (b) => b._id === selectedBatch
+    );
 
-      setReport(res.data.report);
+    if (!batch) {
+      setError("Please select a batch.");
+      return;
+    }
+
+    const res = await axios.post(
+      "http://localhost:5000/api/ai/quality-report",
+      {
+        batchId: batch.name,
+        product: "Herbal Product",
+        quantity: 500,
+        status: batch.status,
+      }
+    );
+
+    setReport(res.data.report);
     } catch (err) {
-      console.error(err);
-      setError("Failed to generate AI report.");
+    console.error(err);
+    setError("Failed to generate AI report.");
     } finally {
-      setLoading(false);
+    setLoading(false);
     }
   };
 
@@ -45,6 +74,18 @@ function Dashboard() {
         <p className="mb-6">
           Analytics and overview of herbal batch traceability data.
         </p>
+
+        <select
+        value={selectedBatch}
+        onChange={(e) => setSelectedBatch(e.target.value)}
+        className="border p-3 rounded mb-6 block w-80"
+        >
+        {batches.map((batch) => (
+        <option key={batch._id} value={batch._id}>
+        {batch.name} - {batch.status}
+        </option>
+        ))}
+        </select>
 
         <button
           onClick={generateReport}
@@ -67,9 +108,12 @@ function Dashboard() {
 
         {report && (
           <div className="mt-8 bg-white rounded-xl shadow-xl border border-gray-200 p-8 max-w-5xl mx-auto">
-            <h2 className="text-2xl font-bold mb-5 text-green-700">
-              AI Quality Report
-            </h2>
+
+        <div className="flex justify-between items-center mb-5">
+         <h2 className="text-2xl font-bold text-green-700">
+          AI Quality Report
+        </h2>
+     </div>
 
            <div
   className="
@@ -100,6 +144,16 @@ function Dashboard() {
           </div>
         )}
       </div>
+
+      <div className= "max-w-5xl mx-auto mt-4 flex justify-end">
+          <button
+           onClick={() => setReport("")}
+          className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg transition"
+          >
+          Clear Report
+        </button>
+      </div>
+
 
       <Footer />
     </>

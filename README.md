@@ -1,16 +1,23 @@
 # AI-Powered-Batch-Traceability-Platform
 
-AI-powered full-stack web application for batch traceability, quality monitoring, and compliance reporting.
+AI-powered full-stack web application for herbal batch traceability, quality monitoring, batch management, and AI-generated compliance reporting using React, Node.js, Express.js, MongoDB Atlas, and Hugging Face Router API.
 
 ## Tech Stack
 
+### Frontend
 - React (Vite)
+- Tailwind CSS
+- Axios
+
+### Backend
 - Node.js
 - Express.js
+
+### Database
 - MongoDB Atlas
 - Mongoose
-- Axios
-- Tailwind CSS
+
+### AI
 - Hugging Face Router API
 - OpenAI SDK
 
@@ -82,6 +89,8 @@ Features:
 - Storage Recommendations
 - Compliance Remarks
 - Final Recommendation
+- Markdown Report Rendering
+- Dynamic Batch Selection
 
 The report is generated dynamically based on the selected batch details and displayed in Markdown format on the dashboard.
 
@@ -134,10 +143,16 @@ npm start
 
 ## Project Features
 
-- User Authentication
-- Google OAuth Login
+## Project Features
+
+- User Registration & Login
+- Google OAuth Authentication
+- JWT Protected Routes
 - Batch Management (CRUD)
-- MongoDB Atlas Integration
 - Batch Search
-- AI Quality Report Generator
+- MongoDB Atlas Integration
+- AI Quality Report Generation
+- Dynamic Batch Selection
+- Markdown Report Rendering
 - Responsive Dashboard
+- Error Handling
