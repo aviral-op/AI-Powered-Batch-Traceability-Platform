@@ -143,8 +143,6 @@ npm start
 
 ## Project Features
 
-## Project Features
-
 - User Registration & Login
 - Google OAuth Authentication
 - JWT Protected Routes
@@ -156,3 +154,12 @@ npm start
 - Markdown Report Rendering
 - Responsive Dashboard
 - Error Handling
+
+
+## Future Enhancements
+
+- Product-specific AI quality reports
+- Advanced analytics dashboard
+- Batch history tracking
+- PDF report export
+- Email notification system
