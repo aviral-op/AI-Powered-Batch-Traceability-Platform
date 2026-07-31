@@ -71,10 +71,12 @@ app.get("/api/batches/search", async (req, res) => {
 
     const q = req.query.q || "";
 
-    const result = await Batch.find({
-      name: { $regex: q, $options: "i" }
-    });
-
+   const result = await Batch.find({
+  $or: [
+    { batchId: { $regex: q, $options: "i" } },
+    { product: { $regex: q, $options: "i" } },
+  ],
+});
     res.status(200).json(result);
 
   } catch (err) {
@@ -101,10 +103,13 @@ app.get("/api/batches/:id", async (req, res) => {
 // 3. POST Batch
 app.post("/api/batches", verifyToken, async (req, res) => {
   try {
-    const batch = new Batch({
-      name: req.body.name,
-      status: req.body.status,
-    });
+   const batch = new Batch({
+  batchId: req.body.batchId,
+  product: req.body.product,
+  quantity: req.body.quantity,
+  unit: req.body.unit,
+  status: req.body.status,
+  });
 
     const savedBatch = await batch.save();
 
@@ -115,15 +120,18 @@ app.post("/api/batches", verifyToken, async (req, res) => {
 });
 
 // 4. PUT Batch
-app.put("/api/batches/:id", async (req, res) => {
+app.put("/api/batches/:id", verifyToken, async (req, res) => {
   try {
 
     const batch = await Batch.findByIdAndUpdate(
       req.params.id,
-      {
-        name: req.body.name,
-        status: req.body.status
-      },
+     {
+       batchId: req.body.batchId,
+       product: req.body.product,
+       quantity: req.body.quantity,
+       unit: req.body.quantity,
+       status: req.body.status,
+     },
       { new: true } // updated document return karega
     );
 
@@ -159,10 +167,42 @@ app.get("/api/seed", async (req, res) => {
   await Batch.deleteMany({});
 
   await Batch.insertMany([
-    { name: "HB001", status: "Approved" },
-    { name: "HB002", status: "Pending" },
-    { name: "HB003", status: "Approved" },
-  ]);
+  {
+    batchId: "HB001",
+    product: "Tulsi Essential Oil",
+    quantity: 500,
+    unit: "L",
+    status: "Approved",
+  },
+  {
+    batchId: "HB002",
+    product: "Neem Oil",
+    quantity: 300,
+    unit: "L",
+    status: "Pending",
+  },
+  {
+    batchId: "HB003",
+    product: "Ashwagandha Powder",
+    quantity: 250,
+    unit: "Kg",
+    status: "Approved",
+  },
+  {
+    batchId: "HB004",
+    product: "Lemongrass Oil",
+    quantity: 450,
+    unit: "L",
+    status: "Rejected",
+  },
+  {
+    batchId: "HB005",
+    product: "Aloe Vera Gel",
+    quantity: 600,
+    unit: "Kg",
+    status: "Pending",
+  },
+]);
 
   res.send("Database Seeded");
 });

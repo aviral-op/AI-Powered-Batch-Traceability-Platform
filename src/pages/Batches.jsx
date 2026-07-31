@@ -9,7 +9,10 @@ function Batches() {
   const token = localStorage.getItem("token");
 
   const [batches, setBatches] = useState([]);
-  const [name, setName] = useState("");
+  const [batchId, setBatchId] = useState("");
+  const [product, setProduct] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [unit, setUnit] = useState("");
   const [status, setStatus] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -48,7 +51,10 @@ function Batches() {
 }, [message]);
 
   const resetForm = () => {
-    setName("");
+    setBatchId("");
+    setProduct("");
+    setQuantity("");
+    setUnit("");
     setStatus("");
     setEditingId(null);
   };
@@ -56,7 +62,13 @@ function Batches() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name.trim() || !status.trim()) {
+    if (
+     !batchId.trim() ||
+     !product.trim() ||
+     Number(quantity) <=0 ||
+     !unit.trim() ||
+     !status.trim()
+     ) {
       setMessage("Please fill all fields.");
       return;
     }
@@ -65,14 +77,26 @@ function Batches() {
       if (editingId) {
         await axios.put(
           `${API}/${editingId}`,
-          { name, status },
+          {
+            batchId,
+            product,
+            quantity: Number(quantity),
+            unit,
+            status,
+          },
           authConfig
         );
         setMessage("Batch updated successfully.");
       } else {
         await axios.post(
           API,
-          { name, status },
+          {
+             batchId,
+             product,
+             quantity: Number(quantity),
+             unit,
+             status,
+          },
           authConfig
         );
         setMessage("Batch added successfully.");
@@ -87,9 +111,12 @@ function Batches() {
 
   const handleEdit = (batch) => {
     setEditingId(batch._id);
-    setName(batch.name);
+    setBatchId(batch.batchId);
+    setProduct(batch.product);
+    setQuantity(batch.quantity);
+    setUnit(batch.unit);
     setStatus(batch.status);
-  };
+    };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete this batch?")) return;
@@ -120,24 +147,55 @@ function Batches() {
 
         <form
           onSubmit={handleSubmit}
-          className="grid md:grid-cols-3 gap-4 mb-8"
+          className="grid md:grid-cols-6 gap-4 mb-8"
         >
-          <input
-            className="border rounded p-2"
-            placeholder="Batch Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+         <input
+          className="border rounded p-2"
+          placeholder="Batch ID"
+          value={batchId}
+          onChange={(e) => setBatchId(e.target.value.toUpperCase())}
           />
+
+          <input
+          className="border rounded p-2"
+          placeholder="Product Name"
+          value={product}
+          onChange={(e) => setProduct(e.target.value)}
+          />
+
+          <input
+          type="number"
+          min="1"
+          className="border rounded p-2"
+          placeholder="Quantity (Liters)"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          />
+
+          <select
+          className="border rounded p-2"
+          value={unit}
+          onChange={(e) => setUnit(e.target.value)}
+          >
+          <option value="" disabled hidden>
+          Select Unit
+          </option>
+          <option value="L">Liter (L)</option>
+          <option value="Kg">Kilogram (Kg)</option>
+          <option value="g">Gram (g)</option>
+          </select>
+
 
         <select
            className="border rounded p-2"
            value={status}
            onChange={(e) => setStatus(e.target.value)}
         >
-          <option value="">Select Status</option>
+          <option value="" disabled hidden>Select Status</option>
           <option value="Pending">Pending</option>
           <option value="Approved">Approved</option>
           <option value="Ready for Dispatch">Ready for Dispatch</option>
+          <option value="Rejected">Rejected</option>
         </select>
 
          <div className="flex gap-2">
@@ -171,16 +229,20 @@ function Batches() {
             <table className="w-full border">
               <thead className="bg-gray-200">
                 <tr>
-                  <th className="border p-2">Batch Name</th>
+                  <th className="border p-2">Batch ID</th>
+                  <th className="border p-2">Product</th>
+                  <th className="border p-2">Quantity</th>
                   <th className="border p-2">Status</th>
                   <th className="border p-2">Actions</th>
-                </tr>
+                  </tr>
               </thead>
 
               <tbody>
                 {batches.map((batch) => (
                   <tr key={batch._id}>
-                    <td className="border p-2">{batch.name}</td>
+                    <td className="border p-2">{batch.batchId}</td>
+                    <td className="border p-2">{batch.product}</td>
+                    <td className="border p-2"> {batch.quantity} {batch.unit}</td>
                     <td className="border p-2">{batch.status}</td>
                     <td className="border p-2 space-x-2">
                       <button

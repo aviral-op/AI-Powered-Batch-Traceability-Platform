@@ -1,4 +1,5 @@
 # AI-Powered-Batch-Traceability-Platform
+**Built with React • Node.js • Express • MongoDB Atlas • Hugging Face Router API**
 
 AI-powered full-stack web application for herbal batch traceability, quality monitoring, batch management, and AI-generated compliance reporting using React, Node.js, Express.js, MongoDB Atlas, and Hugging Face Router API.
 
@@ -70,11 +71,11 @@ http://localhost:5000
 
 Create a `.env` file inside the `backend` folder:
 
-```
+```env
 PORT=5000
+MONGO_URI=your_mongodb_connection_string
+HF_TOKEN=your_huggingface_router_api_key
 ```
-
-The `.env` file is ignored using `.gitignore`.
 
 ## Database
 
@@ -91,6 +92,8 @@ Features:
 - Final Recommendation
 - Markdown Report Rendering
 - Dynamic Batch Selection
+- Product-specific AI Reports
+- Status-aware AI Recommendations
 
 The report is generated dynamically based on the selected batch details and displayed in Markdown format on the dashboard.
 
@@ -109,7 +112,10 @@ The application contains one collection:
 
 ### Batch
 
-- name (String)
+- batchId (String)
+- product (String)
+- quantity (Number)
+- unit (String)
 - status (String)
 
 
@@ -121,13 +127,7 @@ The application contains one collection:
 4. Add your IP Address.
 5. Copy the connection string.
 6. Create a `.env` file inside the backend folder.
-7. Add the following:
-
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-HF_TOKEN=your_huggingface_router_api_key
-```
+7. Add the above environment variables to your .env file.
 
 8. Install dependencies
 
@@ -149,7 +149,8 @@ npm start
 - Batch Management (CRUD)
 - Batch Search
 - MongoDB Atlas Integration
-- AI Quality Report Generation
+- AI-Powered Product-Specific Quality Reports
+- Batch Quantity & Unit Management
 - Dynamic Batch Selection
 - Markdown Report Rendering
 - Responsive Dashboard
@@ -158,7 +159,6 @@ npm start
 
 ## Future Enhancements
 
-- Product-specific AI quality reports
 - Advanced analytics dashboard
 - Batch history tracking
 - PDF report export

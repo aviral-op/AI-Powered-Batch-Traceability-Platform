@@ -46,14 +46,15 @@ function Dashboard() {
     }
 
     const res = await axios.post(
-      "http://localhost:5000/api/ai/quality-report",
-      {
-        batchId: batch.name,
-        product: "Herbal Product",
-        quantity: 500,
-        status: batch.status,
-      }
-    );
+  "http://localhost:5000/api/ai/quality-report",
+  {
+    batchId: batch.batchId,
+    product: batch.product,
+    quantity: batch.quantity,
+    unit: batch.unit,
+    status: batch.status,
+  }
+);
 
     setReport(res.data.report);
     } catch (err) {
@@ -80,10 +81,10 @@ function Dashboard() {
         onChange={(e) => setSelectedBatch(e.target.value)}
         className="border p-3 rounded mb-6 block w-80"
         >
-        {batches.map((batch) => (
-        <option key={batch._id} value={batch._id}>
-        {batch.name} - {batch.status}
-        </option>
+       {batches.map((batch) => (
+      <option key={batch._id} value={batch._id}>
+      {batch.batchId} - {batch.product} ({batch.status})
+      </option>
         ))}
         </select>
 
@@ -145,14 +146,16 @@ function Dashboard() {
         )}
       </div>
 
-      <div className= "max-w-5xl mx-auto mt-4 flex justify-end">
-          <button
-           onClick={() => setReport("")}
-          className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg transition"
-          >
-          Clear Report
-        </button>
-      </div>
+     {report && (
+    <div className="max-w-5xl mx-auto mt-4 flex justify-end">
+    <button
+      onClick={() => setReport("")}
+      className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg transition"
+    >
+      Clear Report
+    </button>
+  </div>
+)}
 
 
       <Footer />

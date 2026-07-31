@@ -7,22 +7,34 @@ const client = new OpenAI({
 
 exports.generateQualityReport = async (req, res) => {
   try {
-    const { batchId, product, quantity, status } = req.body;
+    const { batchId, product, quantity, unit, status } = req.body;
 
-    const prompt = `
-You are a Quality Control Expert for a Herbal & Aromatics company.
+ const prompt = `
+You are an experienced Quality Control Expert working in a Herbal & Aromatics manufacturing company.
 
-Generate a professional AI Quality Report for the following batch.
+Analyze the following production batch and generate a professional quality report.
 
-Batch ID: ${batchId}
-Product: ${product}
-Quantity: ${quantity} liters
-Status: ${status}
+Batch Information:
+- Batch ID: ${batchId}
+- Product: ${product}
+- Quantity: ${quantity} ${unit}
+- Current Status: ${status}
 
-The report must contain ONLY these sections:
+Instructions:
 
-Do NOT include a report title.
-Start directly with:
+- Tailor the report specifically for the given herbal product.
+- Mention characteristics that are relevant to this product only.
+- If the batch status is Pending, discuss possible concerns and additional quality checks before approval.
+- If the batch status is Approved, explain why the batch appears acceptable for use.
+- If the batch status is Ready for Dispatch, state that quality verification has been completed and include suitable storage, packaging, and transportation recommendations before shipment.
+- If the batch status is Rejected, explain likely reasons for rejection and suggest corrective and preventive actions.
+- Vary the wording naturally so reports for different batches are not identical.
+- Provide practical recommendations based on the product type and batch status.
+- Do not invent laboratory values or certification numbers.
+
+Return ONLY Markdown.
+
+Use exactly these sections:
 
 ## 1. Quality Assessment
 - Product Description
@@ -46,17 +58,17 @@ Start directly with:
 
 ## 5. Final Recommendation
 
-Use proper Markdown headings (#, ##, ###), bullet points and spacing.
+- Keep recommendations realistic for herbal and aromatic products.
+- Ensure each report feels unique based on both the product type and batch status.
 
 Rules:
-- Return clean Markdown.
-- Keep the report between 180 and 250 words.
-- Be concise and professional.
-- Do NOT use placeholders like [Your Name], [Date], [Contact Information].
-- Do NOT include "Prepared By".
-- Do NOT include horizontal separators like ---.
-- Recommendations must be specific to herbal products.
-
+- 180–250 words.
+- Professional tone.
+- Proper Markdown headings and bullet points.
+- No report title.
+- No placeholders.
+- No horizontal separators.
+- No "Prepared By".
 `;
 
     const completion = await client.chat.completions.create({
