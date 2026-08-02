@@ -60,7 +60,7 @@ router.get(
 
     console.log("REDIRECTING...");
 
-    res.redirect(`http://localhost:5173/oauth-success?token=${token}`);
+    res.redirect(`${process.env.CLIENT_URL}/oauth-success?token=${token}`);
   }
 );
 
