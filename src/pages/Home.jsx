@@ -18,7 +18,7 @@ function Home() {
   const [productName, setProductName] = useState("");
   useEffect(() => {
    axios
-    .get("http://localhost:5000/api/batches")
+    .get(`${import.meta.env.VITE_API_URL}/batches`)
     .then((response) => {
       setBatches(response.data);
       setLoading(false);
@@ -36,14 +36,17 @@ function Home() {
   }
 
   try {
-    await createBatch({
-      name: productName,
+      await createBatch({
+      batchId: `HB${Date.now()}`,
+      product: productName,
+      quantity: 1,
+      unit: "Kg",
       status: "Pending",
     });
 
     alert("Batch Created Successfully");
 
-    const response = await axios.get("http://localhost:5000/api/batches");
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/batches`);
     setBatches(response.data);
 
     setProductName("");
@@ -85,11 +88,11 @@ function Home() {
     <div className="grid md:grid-cols-2 gap-6 p-8">
     {batches.map((batch) => (
     <BatchCard
-      key={batch._id}
-      batchId={batch.name}
-      product="Herbal Product"
-      status={batch.status}
-     />
+    key={batch._id}
+    batchId={batch.batchId}
+    product={batch.product}
+    status={batch.status}
+    />
      ))}
     </div>
 
@@ -101,7 +104,7 @@ function Home() {
     <p>Batch information loaded from the Express backend.</p>
     </Modal>
 
-    <Toast message="Batch Saved Successfully!" /> 
+    {/*<Toast message="Batch Saved Successfully!" /> */}
     <Footer />
     </div>
   );

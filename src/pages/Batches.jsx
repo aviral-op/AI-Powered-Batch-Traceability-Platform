@@ -3,7 +3,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-const API = "http://localhost:5000/api/batches";
+const API = `${import.meta.env.VITE_API_URL}/batches`;
 
 function Batches() {
   const token = localStorage.getItem("token");

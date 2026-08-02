@@ -15,7 +15,7 @@ function Dashboard() {
 
   const fetchBatches = async () => {
   try {
-    const res = await axios.get("http://localhost:5000/api/batches");
+    const res = await axios.get(`${import.meta.env.VITE_API_URL}/batches`);
     setBatches(res.data);
 
     if (res.data.length > 0) {
@@ -46,7 +46,7 @@ function Dashboard() {
     }
 
     const res = await axios.post(
-  "http://localhost:5000/api/ai/quality-report",
+  `${import.meta.env.VITE_API_URL}/ai/quality-report`,
   {
     batchId: batch.batchId,
     product: batch.product,

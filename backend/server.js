@@ -22,11 +22,16 @@ const authLimiter = rateLimit({
   },
 });
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(
   session({
-    secret: "googleauthsecret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   })
@@ -125,14 +130,16 @@ app.put("/api/batches/:id", verifyToken, async (req, res) => {
 
     const batch = await Batch.findByIdAndUpdate(
       req.params.id,
-     {
-       batchId: req.body.batchId,
-       product: req.body.product,
-       quantity: req.body.quantity,
-       unit: req.body.quantity,
-       status: req.body.status,
-     },
-      { new: true } // updated document return karega
+      {
+        batchId: req.body.batchId,
+        product: req.body.product,
+        quantity: req.body.quantity,
+        unit: req.body.unit,
+        status: req.body.status,
+      },
+    {
+    returnDocument: "after",
+    }
     );
 
     if (!batch) {

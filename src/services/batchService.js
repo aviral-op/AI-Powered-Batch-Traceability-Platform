@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "http://localhost:5000/api/batches";
+const API = `${import.meta.env.VITE_API_URL}/batches`;
 
 export const createBatch = async (batchData) => {
   const token = localStorage.getItem("token");
