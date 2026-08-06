@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link ,useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
 
 function Login() {
@@ -80,6 +80,17 @@ function Login() {
 >
   Sign in with Google
 </button>
+
+
+<p className="text-center mt-4 text-gray-600">
+  Don't have an account?{" "}
+  <Link
+    to="/register"
+    className="text-green-700 font-semibold hover:underline"
+  >
+    Register
+  </Link>
+</p>
       </form>
     </div>
   );
