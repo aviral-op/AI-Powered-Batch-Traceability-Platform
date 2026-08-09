@@ -17,6 +17,7 @@ function Batches() {
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
+  const [filterStatus, setFilterStatus] = useState("All");
 
   const authConfig = {
     headers: {
@@ -50,6 +51,11 @@ function Batches() {
   return () => clearTimeout(timer);
 }, [message]);
 
+
+  const filteredBatches =
+  filterStatus === "All"
+    ? batches
+    : batches.filter((batch) => batch.status === filterStatus);
   const resetForm = () => {
     setBatchId("");
     setProduct("");
@@ -218,6 +224,24 @@ function Batches() {
           </div>
         </form>
 
+        <div className="mb-6 flex flex-wrap items-center gap-3">
+        <label className="font-semibold text-gray-700">
+          Filter by Status:
+        </label>
+
+        <select
+        value={filterStatus}
+        onChange={(e) => setFilterStatus(e.target.value)}
+        className="border rounded-lg p-2 bg-white"
+        >
+        <option value="All">All Batches</option>
+        <option value="Approved">Approved</option>
+        <option value="Pending">Pending</option>
+        <option value="Ready for Dispatch">Ready for Dispatch</option>
+        <option value="Rejected">Rejected</option>
+        </select>
+      </div>
+
         {loading ? (
           <p>Loading batches...</p>
         ) : batches.length === 0 ? (
@@ -238,7 +262,7 @@ function Batches() {
               </thead>
 
               <tbody>
-                {batches.map((batch) => (
+                {filteredBatches.map((batch) => (
                   <tr key={batch._id}>
                     <td className="border p-2">{batch.batchId}</td>
                     <td className="border p-2">{batch.product}</td>

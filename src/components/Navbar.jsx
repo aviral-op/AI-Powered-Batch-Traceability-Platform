@@ -10,6 +10,7 @@ import {
   FaSignInAlt,
   FaSignOutAlt,
   FaUserPlus,
+  FaUserCircle,
 } from "react-icons/fa";
 
 function Navbar() {
@@ -17,7 +18,7 @@ function Navbar() {
   const location = useLocation();
 
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const [profileOpen, setProfileOpen] = useState(false);
   const isLoggedIn = !!localStorage.getItem("token");
 
   const handleLogout = () => {
@@ -73,15 +74,38 @@ function Navbar() {
         </Link>
         </>
         )}
-          {isLoggedIn ? (
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded flex items-center gap-2"
-            >
-              <FaSignOutAlt />
-              Logout
-            </button>
-          ) : (
+  {isLoggedIn ? (
+  <div className="relative">
+    <button
+      onClick={() => setProfileOpen(!profileOpen)}
+      className="bg-green-800 hover:bg-green-900 px-4 py-2 rounded flex items-center gap-2"
+    >
+      <FaUserCircle />
+      Profile
+    </button>
+
+    {profileOpen && (
+      <div className="absolute right-0 mt-2 w-56 bg-white text-gray-800 rounded-lg shadow-xl border border-gray-200 overflow-hidden z-[9999]">
+
+        <div className="px-4 py-3 bg-gray-100 border-b">
+          <p className="font-semibold">User Profile</p>
+          <p className="text-sm text-gray-500">
+            AI Traceability User
+          </p>
+        </div>
+
+        <button
+          onClick={handleLogout}
+          className="w-full px-4 py-3 text-left hover:bg-red-50 text-red-600 flex items-center gap-2"
+        >
+          <FaSignOutAlt />
+          Logout
+        </button>
+
+      </div>
+    )}
+  </div>
+) : (
             <>
               <Link
                 to="/login"
