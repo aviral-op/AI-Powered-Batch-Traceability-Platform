@@ -1,250 +1,514 @@
 # AI-Powered Batch Traceability Platform
 
-**Built with React • Node.js • Express.js • MongoDB Atlas • Hugging Face Router API**
+An AI-powered full-stack web application designed for herbal and aromatic product batch traceability, quality monitoring, batch management, analytics, and AI-generated quality and compliance reporting.
 
-An AI-powered full-stack web application for herbal batch traceability, quality monitoring, batch management, and AI-generated compliance reporting. The platform enables users to manage herbal product batches, authenticate securely using JWT and Google OAuth, and generate AI-powered quality reports using the Hugging Face Router API.
+The platform allows users to securely authenticate, manage production batches, monitor batch status, generate product-specific AI quality reports, and export professional reports as PDF documents.
 
 ---
 
-# Tech Stack
+## Tech Stack
 
-## Frontend
-- React (Vite)
+### Frontend
+
+- React.js
+- Vite
 - Tailwind CSS
 - Axios
 - React Router DOM
+- React Icons
+- Recharts
+- React Markdown
+- jsPDF
+- html2canvas
 
-## Backend
+### Backend
+
 - Node.js
 - Express.js
 - JWT Authentication
-- Passport.js (Google OAuth)
+- Passport.js
+- Google OAuth 2.0
+- Express Session
+- bcrypt
+- dotenv
 
-## Database
+### Database
+
 - MongoDB Atlas
 - Mongoose
 
-## AI Integration
+### AI Integration
+
 - Hugging Face Router API
 - OpenAI SDK
+- Qwen/Qwen2.5-7B-Instruct model
 
-## Deployment
-- Vercel (Frontend)
-- Render (Backend)
+### Deployment
 
----
-
-# Project Features
-
-- User Registration & Login
-- Google OAuth Authentication
-- JWT Protected Routes
-- Batch Management (CRUD Operations)
-- Batch Search
-- MongoDB Atlas Integration
-- AI-Powered Product-Specific Quality Reports
-- Batch Quantity & Unit Management
-- Dynamic Batch Selection
-- Markdown Report Rendering
-- Responsive Dashboard
-- Error Handling
+- Vercel – Frontend
+- Render – Backend
+- MongoDB Atlas – Database
 
 ---
 
-# Frontend Setup
+# Features
 
-Install dependencies:
+## 1. User Authentication
 
-```bash
-npm install
-```
-
-Run the frontend:
-
-```bash
-npm run dev
-```
-
-Frontend runs at:
-
-```
-http://localhost:5173
-```
+- User registration
+- User login
+- Password hashing using bcrypt
+- JWT-based authentication
+- Protected routes
+- Google OAuth authentication
+- Session-based Google authentication
+- Logout functionality
 
 ---
 
-# Backend Setup
+## 2. Batch Management
 
-Open a new terminal:
+Users can manage herbal product production batches through CRUD operations.
 
-```bash
-cd backend
-npm install
-npm run dev
-```
+### Supported Operations
 
-Backend runs at:
+- Create a new batch
+- View all batches
+- View batch details
+- Update batch information
+- Delete batches
+- Search batches
+- Filter batches by status
 
-```
-http://localhost:5000
-```
+### Batch Information
 
----
+Each batch contains:
 
-# API Endpoints
+- Batch ID
+- Product Name
+- Quantity
+- Unit
+- Current Status
 
-## Batch APIs
+### Supported Units
 
-- GET `/api/batches`
-- GET `/api/batches/:id`
-- POST `/api/batches`
-- PUT `/api/batches/:id`
-- DELETE `/api/batches/:id`
-- GET `/api/batches/search?q=HB001`
+- Liters (L)
+- Kilograms (Kg)
+- Grams (g)
 
-## Authentication APIs
+### Supported Statuses
 
-- POST `/api/auth/register`
-- POST `/api/auth/login`
-- GET `/api/auth/google`
-
-## AI APIs
-
-- POST `/api/ai/quality-report`
+- Approved
+- Pending
+- Ready for Dispatch
+- Rejected
 
 ---
 
-# Environment Variables
+## 3. Dashboard & Analytics
 
-Create a `.env` file inside the `backend` folder.
+The dashboard provides an overview of the current batch data.
 
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-SESSION_SECRET=your_session_secret
-CLIENT_URL=your_frontend_url
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-GOOGLE_CALLBACK_URL=your_google_callback_url
-HF_TOKEN=your_huggingface_router_api_key
-```
+### Dashboard Metrics
 
----
+- Total Batches
+- Approved Batches
+- Pending Batches
+- Rejected Batches
 
-# Database
+### Batch Status Overview
 
-The application uses **MongoDB Atlas** as the cloud database.
+A dynamic pie chart is implemented using Recharts to visualize the distribution of batches according to their current status.
 
-## Why MongoDB Atlas?
+The chart displays:
 
-- Flexible document-based database
-- Easy integration with Node.js
-- Free cloud hosting
-- Ideal for CRUD applications
+- Approved
+- Pending
+- Ready for Dispatch
+- Rejected
+
+The analytics are generated dynamically from the batch data stored in MongoDB Atlas.
 
 ---
 
-# Database Schema
+# 4. AI-Powered Quality Report Generator
 
-![Schema Diagram](W5_SchemaDiagram_26101324.png)
+The application includes an AI-powered quality and compliance report generator.
 
-## Batch Collection
+The system uses the Hugging Face Router API through the OpenAI SDK to generate professional reports based on the selected batch.
 
-| Field | Type |
-|--------|------|
-| batchId | String |
-| product | String |
-| quantity | Number |
-| unit | String |
-| status | String |
+The AI receives:
 
----
+- Batch ID
+- Product
+- Quantity
+- Unit
+- Current Status
 
-# Database Setup
-
-1. Create a MongoDB Atlas account.
-2. Create a free cluster.
-3. Create a database user.
-4. Add your IP Address.
-5. Copy the MongoDB connection string.
-6. Create the `.env` file inside the backend folder.
-7. Add the required environment variables.
-8. Install dependencies.
-
-```bash
-npm install
-```
-
-9. Start the backend.
-
-```bash
-npm start
-```
+The generated report is tailored according to the product type and batch status.
 
 ---
 
-# AI Quality Report Generator
+## AI Report Sections
 
-The application includes an AI-powered Quality Report Generator using the Hugging Face Router API.
+Each generated report contains:
 
-### Features
+### 1. Quality Assessment
 
-- AI-generated Quality Assessment
+- Product Description
+- Quality Parameters
+- Conclusion
+
+### 2. Possible Risks
+
+- Storage Risks
+- Handling Risks
+- Transport Risks
+
+### 3. Storage Recommendation
+
+- Temperature
+- Humidity
+- Light Protection
+- Packaging
+
+### 4. Compliance Remarks
+
+- Regulatory Compliance
+- Certifications, where applicable
+
+### 5. Final Recommendation
+
+The AI provides practical recommendations based on the product and its current batch status.
+
+The system is instructed not to invent laboratory values or certification numbers.
+
+---
+
+# 5. Product & Status-Specific AI Reports
+
+The report generation logic changes according to the batch status.
+
+### Pending
+
+The report discusses:
+
+- Potential quality concerns
+- Additional quality checks
+- Conditions required before approval
+
+### Approved
+
+The report explains:
+
+- Why the batch appears acceptable
+- Quality considerations
+- Storage and handling recommendations
+
+### Ready for Dispatch
+
+The report focuses on:
+
+- Completed quality verification
+- Storage requirements
+- Packaging requirements
+- Transportation recommendations
+
+### Rejected
+
+The report discusses:
+
+- Possible reasons for rejection
+- Corrective actions
+- Preventive actions
+
+---
+
+# 6. Reports Page
+
+A dedicated Reports page is implemented for viewing generated AI reports.
+
+The Reports page displays:
+
+- Batch ID
+- Product
+- Quantity
+- Current Status
+- AI Quality & Compliance Report
+- Quality Assessment
 - Risk Analysis
 - Storage Recommendations
 - Compliance Remarks
 - Final Recommendation
-- Product-specific Reports
-- Batch-specific Reports
-- Markdown Report Rendering
-- Dynamic Batch Selection
+
+The report interface has been designed with a professional report-style layout suitable for quality-control documentation.
 
 ---
 
-# Live Deployment
+# 7. PDF Report Export
 
-## Frontend (Vercel)
+Generated AI reports can be exported as professionally formatted PDF documents.
 
-https://ai-powered-batch-traceability-platf.vercel.app
+The PDF report includes:
 
-## Backend (Render)
+- AI Quality & Compliance Report title
+- Batch Information
+- Batch ID
+- Product
+- Quantity
+- Current Status
+- Quality Assessment
+- Possible Risks
+- Storage Recommendations
+- Compliance Remarks
+- Final Recommendation
 
-https://ai-powered-batch-traceability-platform.onrender.com
+The report is formatted as a structured document rather than simply downloading the raw Markdown text.
+
+The application provides an:
+
+**Export PDF**
+
+button on the Reports page.
+
+---
+
+# 8. Markdown Report Rendering
+
+AI-generated responses are returned in Markdown format.
+
+The frontend uses React Markdown to render:
+
+- Headings
+- Bold text
+- Bullet points
+- Numbered sections
+- Paragraphs
+- Report formatting
+
+This makes the generated AI report easier to read and present professionally.
+
+---
+
+# Project Structure
+
+```text
+AI-Powered-Batch-Traceability-Platform/
+│
+├── backend/
+│   ├── config/
+│   │   └── passport.js
+│   │
+│   ├── controllers/
+│   │   ├── aiController.js
+│   │   └── authController.js
+│   │
+│   ├── middleware/
+│   │   └── authMiddleware.js
+│   │
+│   ├── models/
+│   │   ├── Batch.js
+│   │   └── User.js
+│   │
+│   ├── routes/
+│   │   ├── aiRoutes.js
+│   │   └── authRoutes.js
+│   │
+│   ├── .env
+│   ├── .env.example
+│   ├── package.json
+│   └── server.js
+│
+├── public/
+│
+├── src/
+│   ├── components/
+│   │   ├── ui/
+│   │   │   ├── Button.jsx
+│   │   │   ├── Input.jsx
+│   │   │   ├── Loader.jsx
+│   │   │   ├── Modal.jsx
+│   │   │   └── Toast.jsx
+│   │   │
+│   │   ├── BatchCard.jsx
+│   │   ├── Footer.jsx
+│   │   ├── Hero.jsx
+│   │   ├── Navbar.jsx
+│   │   └── ProtectedRoute.jsx
+│   │
+│   ├── pages/
+│   │   ├── Batches.jsx
+│   │   ├── Dashboard.jsx
+│   │   ├── Home.jsx
+│   │   ├── Login.jsx
+│   │   ├── OAuthSuccess.jsx
+│   │   ├── Register.jsx
+│   │   └── Reports.jsx
+│   │
+│   ├── services/
+│   │   ├── authService.js
+│   │   └── batchService.js
+│   │
+│   ├── App.css
+│   ├── App.jsx
+│   ├── index.css
+│   └── main.jsx
+│
+├── .env
+├── .gitignore
+├── index.html
+├── package.json
+├── README.md
+├── vercel.json
+└── vite.config.js
+ ```
 
 ---
 
 # Known Limitations
 
 - Backend is hosted on Render Free Tier.
-- Render free instances spin down after inactivity.
+- Render free instances may spin down after inactivity.
 - The first request after inactivity may take approximately 30–60 seconds.
-- AI report generation depends on Hugging Face API availability.
+- AI report generation depends on Hugging Face Router API availability.
+- Google OAuth requires correctly configured Google Cloud OAuth credentials and callback URLs.
+- Role-Based Access Control is not currently implemented.
+- Batch history and audit trail are not currently implemented.
 
 ---
 
-# Future Enhancements
+# Security
 
-- Advanced Analytics Dashboard
-- Batch History Tracking
+The application implements the following security features:
+
+- Password hashing using bcrypt
+- JWT-based authentication
+- Protected frontend routes
+- Google OAuth authentication
+- Session-based authentication
+- Environment variables for sensitive credentials
+
+Sensitive credentials such as MongoDB connection strings, JWT secrets, Google OAuth credentials, and Hugging Face API keys are stored in environment variables and should not be committed to GitHub.
+
+---
+
+# Error Handling
+
+The application includes error handling for:
+
+- Invalid login credentials
+- Registration errors
+- Failed API requests
+- Database connection errors
+- AI report generation failures
+- Invalid batch data
+- Empty batch selection
+- PDF export failures
+
+User-friendly error messages are displayed when an operation fails.
+
+---
+
+# Application Workflow
+
+```text
+User
+  |
+  v
+Authentication
+  |
+  +-- Email / Password
+  |
+  +-- Google OAuth
+  |
+  v
+Dashboard
+  |
+  +-- Batch Statistics
+  +-- Batch Status Chart
+  |
+  v
+Batch Management
+  |
+  +-- Create Batch
+  +-- View Batches
+  +-- Update Batch
+  +-- Delete Batch
+  +-- Search Batch
+  +-- Filter by Status
+  |
+  v
+Select Batch
+  |
+  v
+AI Quality Report Generation
+  |
+  +-- Quality Assessment
+  +-- Possible Risks
+  +-- Storage Recommendations
+  +-- Compliance Remarks
+  +-- Final Recommendation
+  |
+  v
+Reports Page
+  |
+  +-- View AI Report
+  +-- Clear Report
+  +-- Export PDF
+```
+
+  ---
+
+# Project Status
+
+The AI-Powered Batch Traceability Platform is currently in a functional and deployed state.
+
+The core features required for batch management, authentication, analytics, AI-powered quality reporting, and report generation have been implemented.
+
+## Implemented Features
+
+- User Registration and Login
+- JWT-based Authentication
+- Google OAuth Authentication
+- Protected Routes
+- Batch Creation
+- Batch Viewing
+- Batch Updating
+- Batch Deletion
+- Batch Search
+- Batch Status Filtering
+- MongoDB Atlas Integration
+- Dashboard Statistics
+- Batch Status Analytics using Recharts
+- AI-Powered Quality Report Generation
+- Product-Specific AI Analysis
+- Status-Specific AI Recommendations
+- Dedicated Reports Page
+- Professional AI Report Layout
+- Markdown Report Rendering
 - PDF Report Export
-- Email Notifications
-- Role-Based Access Control
-- Inventory Management
-- QR Code Batch Tracking
+- Frontend Deployment on Vercel
+- Backend Deployment on Render
 
----
-
-# Author
-
-**Aviral Dabral**
-
-B.Tech Computer Science & Engineering
-
-TBI-GEU Summer Internship 2026
+The application is ready for demonstration and further development.
 
 ---
 
 # License
 
 This project is developed for educational purposes as part of the **TBI-GEU Summer Internship 2026**.
+
+The source code is intended for learning, academic evaluation, and demonstration of full-stack web development and AI integration concepts.
+
+© 2026 Aviral Dabral. All rights reserved.
+
+---
+
+# Author
+
+**Aviral Dabral**  
+B.Tech Computer Science & Engineering  
+TBI-GEU Summer Internship 2026
+
+**Project:**  
+AI-Powered Batch Traceability & Quality Intelligence Platform
